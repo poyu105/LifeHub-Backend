@@ -55,7 +55,10 @@ exports.login = async (req,res) =>{
             return res.status(400).json({message:'Invalid credentials'});
         }
         console.log('B:登入成功');
-        res.status(200).json({message:'User login successfully'});
+        res.status(200).json({
+            message: 'User login successfully',
+            user: { id: user._id, username: user.username, email: user.email }
+        });
     } catch (error) {
         console.log('B:登入失敗');
         res.status(500).json({message:'Error logging in', error});   
