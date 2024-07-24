@@ -25,4 +25,4 @@ const UserSchema = new mongoose.Schema({
     }
 }, {timestamps:true})//mongoose 自動添加createAt、updateAt
 
-module.exports = mongoose.model('User', UserSchema)
+module.exports = mongoose.model('users', UserSchema)
