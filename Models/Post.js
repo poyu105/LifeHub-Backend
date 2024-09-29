@@ -69,7 +69,7 @@ const PostSchema = new Schema({
             max: 5
         }
     }]
-},{timstamps:true});
+},{timestamps:true});
 
 function arrayLimit(val){
     return val.length <= 5;
