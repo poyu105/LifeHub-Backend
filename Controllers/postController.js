@@ -6,7 +6,6 @@ exports.createPost = async (req,res)=>{
         const {userId, userName, city, district, content, postDate, tags} = req.body;
         // 將上傳的檔案路徑儲存到資料庫
         const mediaFiles = req.files.map(file => {
-            console.log(`檔案名稱: ${file.originalname} \n 檔案類型: ${file.mimetype}`);
             return {
                 url: file.path,
                 type: file.mimetype.startsWith('image/') ? 'image' : 'video'
@@ -31,13 +30,52 @@ exports.createPost = async (req,res)=>{
 }
 
 // 獲取所有貼文
-exports.getPosts = async (req, res)=>{
+exports.getAllPosts = async (req, res)=>{
     try {
-        const posts = await Post.find().populate('userId','username');
-        console.log(`B: posts: ${posts}\n`);
-        res.status(201).json(posts);
+        const posts = await Post.find().sort({ createdAt: -1 });//依照最新時間排序
+        res.status(200).json(posts);
     } catch (error) {
-        console.log(`B: Error fetching posts: ${error}\n`);
+        console.log(`\n B: Error fetching posts on postController.getAllPosts: ${error}\n`);
         res.status(500).json({message: `Failed to fetch posts`});
+    }
+}
+// 獲取標籤為美食推薦的貼文
+exports.getFoodRec = async (req, res) => {
+    try {
+        const posts = await Post.find({ tags: '#美食推薦' }).sort({ createdAt: -1 });
+        res.status(200).json(posts);
+    } catch (error) {
+        console.log(`\n B: Error fetching posts on postController.getFoodRec: ${error}\n`);
+        res.status(500).json({ message: 'Failed to fetch posts' });
+    }
+}
+//獲取標籤為交通指南的貼文
+exports.getTrafficGuide = async (req, res) => {
+    try {
+        const posts = await Post.find({tags: '#交通指南'}).sort({ createdAt: -1 });
+        res.status(200).json(posts);
+    } catch (error) {
+        console.log(`\n B: Error fetching posts on postController.getTrafficGuide: ${error}\n`);
+        res.status(500).json({ message: 'Failed to fetch posts' });
+    }
+}
+//獲取標籤為購物指南的貼文
+exports.getShoppingGuide = async (req, res) => {
+    try {
+        const posts = await Post.find({tags: '#購物指南'}).sort({ createdAt: -1 });
+        res.status(200).json(posts);
+    } catch (error) {
+        console.log(`\n B: Error fetching posts on postController.getShoppingGuide: ${error}\n`);
+        res.status(500).json({ message: 'Failed to fetch posts' });
+    }
+}
+//獲取標籤為休閒娛樂的貼文
+exports.getEntertainment = async (req, res) => {
+    try {
+        const posts = await Post.find({tags: '#休閒娛樂'}).sort({ createdAt: -1 });
+        res.status(200).json(posts);
+    } catch (error) {
+        console.log(`\n B: Error fetching posts on postController.getEntertainment: ${error}\n`);
+        res.status(500).json({ message: 'Failed to fetch posts' });
     }
 }
