@@ -5,7 +5,13 @@ exports.createPost = async (req,res)=>{
     try {
         const {userId, userName, city, district, content, postDate, tags} = req.body;
         // 將上傳的檔案路徑儲存到資料庫
-        const mediaFiles = req.files.map(file => file.path);
+        const mediaFiles = req.files.map(file => {
+            console.log(`檔案名稱: ${file.originalname} \n 檔案類型: ${file.mimetype}`);
+            return {
+                url: file.path,
+                type: file.mimetype.startsWith('image/') ? 'image' : 'video'
+            };
+        });
         const newPost = new Post({
             userId,
             userName,
@@ -28,6 +34,7 @@ exports.createPost = async (req,res)=>{
 exports.getPosts = async (req, res)=>{
     try {
         const posts = await Post.find().populate('userId','username');
+        console.log(`B: posts: ${posts}\n`);
         res.status(201).json(posts);
     } catch (error) {
         console.log(`B: Error fetching posts: ${error}\n`);
