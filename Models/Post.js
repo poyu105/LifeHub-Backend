@@ -19,10 +19,20 @@ const PostSchema = new Schema({
         type:String,
         require:true
     },
-    mediaFiles:{
-        type:[String],
-        validate:[arrayLimit, `{PATH} exceeds the limit of 5`],
-        require: true
+    mediaFiles: {
+        type: [{
+            url: {
+                type: String,
+                required: true,
+            },
+            type: {
+                type: String,
+                enum: ['image', 'video'],
+                required: true,
+            },
+        }],
+        validate: [arrayLimit, `{PATH} exceeds the limit of 5`],
+        required: true,
     },
     content:{
         type:String,
