@@ -52,6 +52,10 @@ const PostSchema = new Schema({
             type:Schema.Types.ObjectId,
             ref:'users'
         },
+        username: {
+            type: String,
+            required: true
+        },
         content: String,
         createAt:{
             type:Date,
