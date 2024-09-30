@@ -1,4 +1,5 @@
 const Post = require('../Models/Post');
+const User = require('../Models/User');
 
 // 創建新貼文
 exports.createPost = async (req,res)=>{
@@ -77,5 +78,31 @@ exports.getEntertainment = async (req, res) => {
     } catch (error) {
         console.log(`\n B: Error fetching posts on postController.getEntertainment: ${error}\n`);
         res.status(500).json({ message: 'Failed to fetch posts' });
+    }
+}
+//新增留言
+exports.addNewReply = async (req, res)=>{
+    const {postId} = req.params;
+    const {userId, content} = req.body;
+    try {
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+        const user = await User.findById(userId);
+        if(!user){
+            return res.status(404).json({message: 'User not found'});
+        }
+        const newComment = {
+            userId,
+            username: user.username,
+            content,
+            createAt: new Date()
+        };
+        post.comments.push(newComment);
+        await post.save();
+        res.status(201).json(newComment);
+    } catch (error) {
+        res.status(500).json({message: 'Server Error.'});
     }
 }
