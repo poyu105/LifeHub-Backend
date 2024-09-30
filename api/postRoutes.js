@@ -16,4 +16,6 @@ router.get('/trafficGuide',postController.getTrafficGuide);
 router.get('/shoppingGuide',postController.getShoppingGuide);
 //獲取標籤為休閒娛樂的貼文
 router.get('/entertainment',postController.getEntertainment);
+//新增評論
+router.post('/:postId/comments',postController.addNewReply);
 module.exports = router;
