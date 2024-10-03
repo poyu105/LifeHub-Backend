@@ -11,4 +11,7 @@ router.post('/login', authController.login);
 //更新路由
 router.put('/update/:id', authController.update);
 
+//獲取用戶貼文
+router.get('/:id/posts', authController.getPosts);
+
 module.exports = router;
