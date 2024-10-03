@@ -39,28 +39,51 @@ exports.register = async (req, res) =>{
 exports.login = async (req,res) =>{
     const {email, password} = req.body;
     try {
-        console.log('B:進入查找用戶');
         //查找用戶
         const user = await User.findOne({email});
         if(!user){
-            console.log('B:查無用戶，已退出登入');
             return res.status(400).json({message:'Invalid credentials'});
         }
-
-        console.log('B:進入核對密碼');
         //核對密碼
         const isMatch = await bcrpyt.compare(password, user.password);
         if(!isMatch){
-            console.log('B:密碼核對失敗，退出登入');
             return res.status(400).json({message:'Invalid credentials'});
         }
-        console.log('B:登入成功');
         res.status(200).json({
             message: 'User login successfully',
-            user: { id: user._id, username: user.username, email: user.email }
+            user: { id: user._id, username: user.username, email: user.email, birthDate: user.birthDate, phoneNumber: user.phoneNumber }
         });
     } catch (error) {
-        console.log('B:登入失敗');
         res.status(500).json({message:'Error logging in', error});   
+    }
+}
+// Update
+exports.update = async (req, res) => {
+    const userId = req.params.id;
+    const { username, email, phoneNumber, birthDate } = req.body;
+
+    try {
+        const user = await User.findById(userId);
+        if(!user){
+            return res.status(404).json({message: 'User not found'});
+        }
+        user.username = username;
+        user.email = email;
+        user.phoneNumber = phoneNumber;
+        user.birthDate = birthDate;
+        const updatedUser = await user.save();
+        res.status(200).json({
+            message: 'User updated successfully',
+            user: { 
+                id: updatedUser._id, 
+                username: updatedUser.username, 
+                email: updatedUser.email, 
+                phoneNumber: updatedUser.phoneNumber, 
+                birthDate: updatedUser.birthDate 
+            }
+        });
+    } catch (error) {
+        console.log(`Error updating user: ${error}`);
+        res.status(500).json({ message: 'Error updating user', error });
     }
 }
