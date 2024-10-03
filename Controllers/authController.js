@@ -1,4 +1,5 @@
 const User = require('../Models/User')
+const Post = require('../Models/Post')
 const bcrpyt = require('bcrypt')
 
 //Register
@@ -87,3 +88,14 @@ exports.update = async (req, res) => {
         res.status(500).json({ message: 'Error updating user', error });
     }
 }
+// 獲取貼文
+exports.getPosts = async (req, res) => {
+    const userId = req.params.id;
+    try {
+        const posts = await Post.find({ userId: userId });
+        res.status(200).json(posts);
+    } catch (error) {
+        console.error(`獲取貼文失敗: ${error}`);
+        res.status(500).json({ message: "獲取貼文失敗" });
+    }
+};
